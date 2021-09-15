@@ -2,16 +2,21 @@
 
 This project helps to understand and build VOIP endpoints with PJSIP-PSUA2 api.
 
-Provide opportunties to with multiple languages.
+Provide opportunties to work with multiple languages.
 
-Documentations:
+Documentation:
 
+From multiple sources:
+ - stackoverflow, 
+ - githubs, 
+ - medium articles
 
-From multiple sources (stackoverflow, githubs, and medium articles)
+specifically on both pjsua (older/decprecated) and psua2
 
 https://docs.pjsip.org/en/2.10/api/pjsua2.html
 https://docs.pjsip.org/en/latest/pjsua2/intro_pjsua2.html
 
 relevant information regarding PSJIP-PSUA:
 
-https://www.pjsip.org/release/0.5.4/PJSIP-Dev-Guide.pdf
+pjsua - https://www.pjsip.org/release/0.5.4/PJSIP-Dev-Guide.pdf
+pjsua2 - https://www.pjsip.org/docs/book-latest/PJSUA2Doc.pdf
