@@ -1,6 +1,10 @@
+
+# base most on https://github.com/robvangeloven/PJSUA2-Docker
+# Only internal playback without any real audio devices
+
 FROM python:3.9.6-slim-buster AS base
 
-LABEL maintainer="Toan Nguyen"
+MAINTAINER ="Toan Nguyen"
 
 ARG VERSION_PJSIP=2.10
 
@@ -75,8 +79,9 @@ WORKDIR pjsip-apps/src/swig
 RUN make \
     && make install
 
-#FROM base AS final
-FROM python:3.9.6-slim-buster 
+# Minimize image footprint
+
+FROM base AS final
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 RUN apt-get update -y \
