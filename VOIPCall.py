@@ -2,9 +2,9 @@
 import pjsua2 as pj
 import time 
 import wave
-import credentials as cr 
+import credentials as cr
 
-# This simple example of pjsua2 python dials an outbound call. 
+# This example of pjsua2 python dials an outbound call. 
 # Incorporated from multiple stackoverflow questions and Mr Tyler Long
 # Code based on pjsip-apps of pjsua 2call.py and ringcentral example 
 # https://www.pjsip.org/docs/book-latest/PJSUA2Doc.pdf
@@ -47,15 +47,18 @@ class Call(pj.Call):
         # call is connected
         self.connected = True
 
-        # check for media type and status 
+        # check for media type and status since we can have
+        # more than one media types (audio, video)
         for  mi in  ci.media:
+          # we just want audio 
           if mi.type == pj.PJMEDIA_TYPE_AUDIO and \
               mi.status == pj.PJSUA_CALL_MEDIA_ACTIVE:
               
+              # get the proper audioMedia player currently joined the bridge
               m = self.getMedia(mi.index)
               am = pj.AudioMedia.typecastFromMedia(m)
 
-              # create playback
+              # create playback and stream back the proper audioMedia player
               player = pj.AudioMediaPlayer()
               player.createPlayer(self.playbackMedia)
               # send the audio stream 
@@ -67,6 +70,7 @@ class Call(pj.Call):
               # clean up the call after finish the call
               pj.call.hangup()
               break
+          # if call is no longer connected, disconnect
           elif (ci.state == pj.PJSIP_INV_STATE_DISCONNECTED):
               exit(0)
 
@@ -118,19 +122,21 @@ def pjsua2_test():
     acfg.sipConfig.authCreds.push_back(cred)
     #acfg.sipConfig.getProxi
     
-    # Create the account
+    # Create the account with the proper registration info
+    # send the SIP REGISTER to the server 
     acc = Account()
     acc.create(acfg)
     time.sleep(2)
 
+    # initialize Call class with the proper SIP acc
     myCall = Call(acc)
-    myCall.setplaybackMedia(playbackFile="/PSTN/DockerVmail.wav")
-
+    myCall.setplaybackMedia(playbackFile=cr.playbackMedia)
+    
+    #default call parameter/can further customize
     prm = pj.CallOpParam()
-
+    #dial an outbound call
     myCall.makeCall("sip:"+cr.calleeNumber+"@"+cr.sipDomain, prm)
-    count = 0
-
+    
     # Polling for the events otherwise will terminate after a few events
     # https://stackoverflow.com/questions/62289196/pjsip-client-does-not-ack-invite-response
     while True:
