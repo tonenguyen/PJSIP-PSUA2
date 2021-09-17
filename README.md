@@ -13,10 +13,10 @@ From multiple sources:
 
 specifically on both pjsua (older/decprecated) and psua2
 
-https://docs.pjsip.org/en/2.10/api/pjsua2.html
-https://docs.pjsip.org/en/latest/pjsua2/intro_pjsua2.html
+https://docs.pjsip.org/en/2.10/api/pjsua2.html  <br />
+https://docs.pjsip.org/en/latest/pjsua2/intro_pjsua2.html <br />
 
 relevant information regarding PSJIP-PSUA:
 
-pjsua - https://www.pjsip.org/release/0.5.4/PJSIP-Dev-Guide.pdf
+pjsua - https://www.pjsip.org/release/0.5.4/PJSIP-Dev-Guide.pdf <br />
 pjsua2 - https://www.pjsip.org/docs/book-latest/PJSUA2Doc.pdf
