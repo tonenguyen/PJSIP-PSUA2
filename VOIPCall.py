@@ -29,7 +29,7 @@ class Call(pj.Call):
         self.playbackMedia = ""
         
     def setplaybackMedia(self, playbackFile="" ):
-      self.playbackMediaDuration=playbackFile
+      self.playbackMedia=playbackFile
     
     def getplaybackMediaDuration(self):
         #https://stackoverflow.com/questions/7833807/get-wav-file-length-or-duration
