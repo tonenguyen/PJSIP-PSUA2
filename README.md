@@ -28,5 +28,5 @@ necessary to instantiate own your polling thread. Having said that the applicati
 callbacks called by different thread than the main thread. The PJSUA2 module itself is thread safe. <br />
 
 Often though, especially if you use PJSUA2 with high level languages such as Python, it is required to disable PJSUA2
-internal worker threads by setting
- a)  EpConfig.uaConfig.threadCnt to 0
+internal worker threads by setting:
+ - EpConfig.uaConfig.threadCnt to 0
