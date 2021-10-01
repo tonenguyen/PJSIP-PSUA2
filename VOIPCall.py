@@ -13,7 +13,9 @@ import credentials as cr
 
 # pg 37
 
+
 class Account(pj.Account):
+
    # SIP Registration 
    def onRegState(self, prm):
        ai = pj.Account.getInfo(self)
@@ -40,15 +42,13 @@ class Call(pj.Call):
           # duration = total number of frames / playback frame rate
           return  (1.0 * wfile.getnframes ()) / wfile.getframerate ()
     
-    def onCallState(self, prm):
-      #callInfo
-      ci = self.getInfo()
-      if (ci.state == pj.PJSIP_INV_STATE_CONFIRMED):
-        # call is connected
-        self.connected = True
+    def handleMedia(self, ci):
+        if not (ci):
+            ci = self.getInf()
 
         # check for media type and status since we can have
         # more than one media types (audio, video)
+
         for  mi in  ci.media:
           # we just want audio 
           if mi.type == pj.PJMEDIA_TYPE_AUDIO and \
@@ -61,20 +61,39 @@ class Call(pj.Call):
               # create playback and stream back the proper audioMedia player
               player = pj.AudioMediaPlayer()
               player.createPlayer(self.playbackMedia)
+
               # send the audio stream 
               player.startTransmit(am)
-              # Allow the proper time  while transmit the audio stream
+
+              # Allow the proper wait time  while transmit the audio stream
               # Otherwise, transmission will terminate right away
+
               playbackMediaDuration = self.getplaybackMediaDuration()
-              time.sleep(playbackMediaDuration)
+
+              for _ in range(0, int(playbackMediaDuration)):
+                  if (pj.Call.isActive()):
+                      time.sleep(1)
+              
               # clean up the call after finish the call
-              pj.call.hangup()
+              pj.Call.hangup()
               break
-          # if call is no longer connected, disconnect
-          elif (ci.state == pj.PJSIP_INV_STATE_DISCONNECTED):
-              exit(0)
+
+    def onCallState(self, prm):
+
+      #callInfo
+      ci = self.getInfo()
+
+      if (ci.state == pj.PJSIP_INV_STATE_CONFIRMED):
+        # call is connected
+        self.connected = True
+        # refactor to `handle media cleaner
+        self.handleMedia(ci)
+       # if call is no longer connected, disconnect
+       elif (ci.state == pj.PJSIP_INV_STATE_DISCONNECTED):
+          exit(0)
 
 # pjsua2 test function
+
 def pjsua2_test():
     # Everything starts with an endpoint. pg 21 
     # create &  initialize the library of a single endpoint.
@@ -83,7 +102,11 @@ def pjsua2_test():
     ep_cfg = pj.EpConfig() 
     # extra logging for troubleshooting
     ep_cfg.logConfig.level=4
-    ep_cfg.uaConfig.threadCnt = 0; #Python does not like PJSUA2's thread. It will result in segment fault
+
+    #Python does not like PJSUA2's thread due to GIL. It will result in segment fault.
+    #This also possibly introduces issues with being stuck in pool
+
+    ep_cfg.uaConfig.threadCnt = 0; 
     ep_cfg.uaConfig.userAgent = cr.userAgentTag
 
     #endpoint instantiate 
