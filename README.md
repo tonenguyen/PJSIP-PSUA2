@@ -30,3 +30,9 @@ callbacks called by different thread than the main thread. The PJSUA2 module its
 Often though, especially if you use PJSUA2 with high level languages such as Python, it is required to disable PJSUA2
 internal worker threads by setting:
  - EpConfig.uaConfig.threadCnt to 0
+
+### Docker info & build
+
+- working image based on python:3.9.6-slim-buster and VERSION_PJSIP=2.10 
+- https://github.com/pjsip/pjproject/archive/2.10.tar.gz
+- Need to resolve build issue(s) with 2.11 onward 
