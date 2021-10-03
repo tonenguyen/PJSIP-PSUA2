@@ -20,7 +20,7 @@ class Account(pj.Account):
    def onRegState(self, prm):
        ai = pj.Account.getInfo(self)
        print("#####", ai)
-       print ("***OnRegState: " + prm.reason)
+       print("***OnRegState: " + prm.reason)
 
 class Call(pj.Call):
   
@@ -80,17 +80,17 @@ class Call(pj.Call):
 
     def onCallState(self, prm):
 
-      #callInfo
-      ci = self.getInfo()
+        #callInfo
+        ci = self.getInfo()
 
-      if (ci.state == pj.PJSIP_INV_STATE_CONFIRMED):
-        # call is connected
-        self.connected = True
-        # refactor to `handle media cleaner
-        self.handleMedia(ci)
-       # if call is no longer connected, disconnect
-       elif (ci.state == pj.PJSIP_INV_STATE_DISCONNECTED):
-          exit(0)
+        if (ci.state == pj.PJSIP_INV_STATE_CONFIRMED):
+            # call is connected
+            self.connected = True
+            # refactor to `handle media cleaner
+            self.handleMedia(ci)
+        # if call is no longer connected, disconnect
+        elif (ci.state == pj.PJSIP_INV_STATE_DISCONNECTED):
+            exit(0)
 
 # pjsua2 test function
 
@@ -158,12 +158,24 @@ def pjsua2_test():
     #default call parameter/can further customize
     prm = pj.CallOpParam()
     #dial an outbound call
+
     myCall.makeCall("sip:"+cr.calleeNumber+"@"+cr.sipDomain, prm)
     
+    #set the time how long the call will last before hanging up the call
+    endTime = time.perf_counter() + cr.setCallDuration
+
     # Polling for the events otherwise will terminate after a few events
     # https://stackoverflow.com/questions/62289196/pjsip-client-does-not-ack-invite-response
+    # At times, call hang up needs within polling loop due to python GIL
+
     while True:
-      ep.libHandleEvents(10)
+      # ms for polling events
+      ep.libHandleEvents(100)
+      # check the current time
+      currentTime = time.time_perf_counter()
+      # hang up the call when call duration exceeds setCallDuration
+      if curentTime > endTime:
+          myCall.hangup(prm)
       
 
     # Destroy the library / end of ep
