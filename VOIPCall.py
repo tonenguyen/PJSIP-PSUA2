@@ -172,7 +172,7 @@ def pjsua2_test():
       # ms for polling events
       ep.libHandleEvents(100)
       # check the current time
-      currentTime = time.time_perf_counter()
+      currentTime = time.perf_counter()
       # hang up the call when call duration exceeds setCallDuration
       if curentTime > endTime:
           myCall.hangup(prm)
