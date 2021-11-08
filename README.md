@@ -36,3 +36,8 @@ internal worker threads by setting:
 - working image based on python:3.9.6-slim-buster and VERSION_PJSIP=2.10 
 - https://github.com/pjsip/pjproject/archive/2.10.tar.gz
 - Need to resolve build issue(s) with 2.11 onward 
+
+### Current implementation:
+
+- InboundVOIPCall.py can handle multiple inbound calls. Call max count is at 4. it will cycle (0,1,2,3). 
+- OutboundVOIPCall.py dials out on specific call to Callee. 
